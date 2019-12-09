@@ -62,16 +62,16 @@ class BugsPubView(ModelView):
     datamodel = SQLAInterface(Bugs)
     base_permissions = ["can_list", "can_show","menu_access"]
 
-    label_columns = {"bug_url": "BZ#"}
+    #label_columns = {"bug_url": "BZ#"}
 
-    list_columns = ["id", "test_suite","case_name", "bug_url", "bug_status", "instance_type","branch_name",
-"comments", "last_update"]
-    search_columns = ["id", "test_suite","case_name", "bug_id", "bug_status", "instance_type","branch_name",
-"comments", "last_update"]
+    list_columns = ["id", "test_suite","case_name", "bug_url", "bug_title", "bug_status", "branch_name",
+"comments", "last_update","create_date"]
+    search_columns = ["id", "test_suite","case_name", "bug_id", "bug_title", "bug_status", "branch_name",
+"comments", "last_update","create_date"]
 
     show_fieldsets = [
-        ("Summary", {"fields": ["id", "test_suite","case_name", "bug_id", "bug_status", "instance_type","branch_name",
-"comments", "last_update"]}),
+        ("Summary", {"fields": ["id", "test_suite","case_name", "bug_id", "bug_title", "bug_status", "branch_name",
+"comments", "last_update","create_date"]}),
         ("Description", {"fields": ["description"], "expanded": True}),
     ]
     #base_order = ("log_id", "asc")
@@ -81,16 +81,16 @@ class BugsView(ModelView):
     datamodel = SQLAInterface(Bugs)
     base_permissions = ["can_list", "can_show","menu_access","can_add","can_edit","can_delete"]
 
-    label_columns = {"bug_url": "BZ#"}
+    #label_columns = {"bug_url": "BZ#"}
 
-    list_columns = ["id", "test_suite","case_name", "bug_url", "bug_status", "instance_type","branch_name",
-"comments", "last_update"]
-    search_columns = ["id", "test_suite","case_name", "bug_id", "bug_status", "instance_type","branch_name",
-"comments", "last_update"]
+    list_columns = ["id", "test_suite","case_name", "bug_url", "bug_title", "bug_status", "branch_name",
+"comments", "last_update","create_date"]
+    search_columns = ["id", "test_suite","case_name", "bug_id", "bug_title", "bug_status", "branch_name",
+"comments", "last_update","create_date"]
 
     show_fieldsets = [
-        ("Summary", {"fields": ["id", "test_suite","case_name", "bug_url", "bug_status", "instance_type","branch_name",
-"comments", "last_update"]}),
+        ("Summary", {"fields": ["id", "test_suite","case_name", "bug_url", "bug_title", "bug_status", "branch_name",
+"comments", "last_update","create_date"]}),
         ("Description", {"fields": ["description"], "expanded": True}),
     ]
     #base_order = ("log_id", "asc")

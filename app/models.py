@@ -40,11 +40,12 @@ class Bugs(Model):
     test_suite = Column(String(50))
     case_name = Column(String(50))
     bug_id = Column(Integer,nullable=True)
+    bug_title = Column(String(200),nullable=True)
     bug_status = Column(String(50),nullable=True)
-    instance_type = Column(String(50),nullable=True)
     branch_name = Column(String(50),nullable=True)
     comments = Column(String)
     last_update =  Column(Date)
+    create_date =  Column(Date)
 
     def __repr__(self):
         return self.log_id
