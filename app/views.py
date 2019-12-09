@@ -175,6 +175,20 @@ class EC2TestSumChartView(GroupByChartView):
         },
     ]
 
+class TestBugsByCaseChartView(GroupByChartView):
+    datamodel = SQLAInterface(Bugs)
+    chart_title = "Test Bugs by Case"
+    chart_type = 'ColumnChart'
+
+    definitions = [
+        {
+            "label": "Test Bugs by Case",
+            "group": "case_name",
+            "series": [
+                (aggregate_count, "case_name"),
+            ],
+        },
+    ]
 
 db.create_all()
 appbuilder.add_view(ReportPubView, "List avocado-cloud Test Reports", icon="fa-folder-open-o",category="TestReports")
@@ -202,6 +216,10 @@ appbuilder.add_view(
 )
 appbuilder.add_view(
     EC2TestSumChartView, "EC2 Test Sum", icon="fa-folder-open-o", category="DataAnalyze"
+)
+
+appbuilder.add_view(
+    TestBugsByCaseChartView, "Test Bugs by Case", icon="fa-folder-open-o", category="DataAnalyze"
 )
 
 #appbuilder.add_view(ReportPubView, "TestReports", icon="fa-folder-open-o", category="TestReports")
