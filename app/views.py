@@ -4,14 +4,14 @@ from flask_appbuilder.widgets import ListBlock, ShowBlockWidget
 
 
 from . import appbuilder, db
-from .models import Product, ProductType, Report, Bugs
+from .models import Report, Bugs
 
 #Below import is for charts
 import calendar
 from flask_appbuilder.charts.views import (
     DirectByChartView, DirectChartView, GroupByChartView
 )
-from flask_appbuilder.models.group import aggregate_avg, aggregate_sum, aggregate_count
+from flask_appbuilder.models.group import aggregate_avg, aggregate_sum, aggregate_count, aggregate
 
 class ReportPubView(ModelView):
     datamodel = SQLAInterface(Report)
@@ -133,6 +133,19 @@ class EC2TestRunChartView(DirectByChartView):
 #        },
 ]
 
+
+#@aggregate(label='Total diff')
+#def aggregate_total(items, col):
+#    """
+#        Function to count how many diff itmes found.
+#        accepts a list and returns the sum of the list's items
+#    """
+#    col_list = []
+#    col_list.append(getattr(item, col) for item in items)
+#    #col_set = set(col_list)
+#    #print("%s"%items)
+#    return len(items)
+
 class EC2TestSumChartView(GroupByChartView):
     datamodel = SQLAInterface(Report)
     chart_title = "EC2 Test Sum"
@@ -153,7 +166,14 @@ class EC2TestSumChartView(GroupByChartView):
                 (aggregate_count, "instance_type"),
             ],
         },
-]
+        {
+            "label": "EC2 Test By Compose ID",
+            "group": "compose_id",
+            "series": [
+                (aggregate_count, "compose_id"),
+            ],
+        },
+    ]
 
 
 db.create_all()
