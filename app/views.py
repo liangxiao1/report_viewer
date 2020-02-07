@@ -4,7 +4,7 @@ from flask_appbuilder.widgets import ListBlock, ShowBlockWidget
 
 
 from . import appbuilder, db
-from .models import Report, Bugs
+from .models import Report, Bugs, FailureType, FailureStatus
 
 #Below import is for charts
 import calendar
@@ -64,14 +64,14 @@ class BugsPubView(ModelView):
 
     #label_columns = {"bug_url": "BZ#"}
 
-    list_columns = ["id", "test_suite","case_name", "bug_url", "bug_title", "bug_status", "branch_name",
+    list_columns = ["id", "test_suite","case_name", "bug_url", "bug_title", "failure_status", "failure_type",
 "comments", "last_update","create_date"]
-    search_columns = ["id", "test_suite","case_name", "bug_id", "bug_title", "bug_status", "branch_name",
-"comments", "last_update","create_date"]
+    search_columns = ["id", "test_suite","case_name", "bug_id", "bug_title", "failure_status", "branch_name",
+"comments", "last_update","create_date",'failure_type','identify_keywords','identify_debuglog','contactor']
 
     show_fieldsets = [
-        ("Summary", {"fields": ["id", "test_suite","case_name", "bug_id", "bug_title", "bug_status", "branch_name",
-"comments", "last_update","create_date"]}),
+        ("Summary", {"fields": ["id", "test_suite","case_name", "bug_id", "bug_title", "failure_status", "branch_name",
+"comments", "last_update","create_date",'failure_type','identify_keywords','identify_debuglog','contactor']}),
         ("Description", {"fields": ["description"], "expanded": True}),
     ]
     #base_order = ("log_id", "asc")
@@ -83,18 +83,26 @@ class BugsView(ModelView):
 
     #label_columns = {"bug_url": "BZ#"}
 
-    list_columns = ["id", "test_suite","case_name", "bug_url", "bug_title", "bug_status", "branch_name",
+    list_columns = ["id", "test_suite","case_name", "bug_url", "bug_title", "failure_status", "failure_type",
 "comments", "last_update","create_date"]
-    search_columns = ["id", "test_suite","case_name", "bug_id", "bug_title", "bug_status", "branch_name",
-"comments", "last_update","create_date"]
+    search_columns = ["id", "test_suite","case_name", "bug_id", "bug_title", "failure_status", "branch_name",
+"comments", "last_update","create_date",'failure_type','identify_keywords','identify_debuglog','contactor']
 
     show_fieldsets = [
-        ("Summary", {"fields": ["id", "test_suite","case_name", "bug_url", "bug_title", "bug_status", "branch_name",
-"comments", "last_update","create_date"]}),
+        ("Summary", {"fields": ["id", "test_suite","case_name", "bug_url", "bug_title", "failure_status", "branch_name",
+"comments", "last_update","create_date",'failure_type','identify_keywords','identify_debuglog','contactor']}),
         ("Description", {"fields": ["description"], "expanded": True}),
     ]
     #base_order = ("log_id", "asc")
     base_order = ("id", "desc")
+
+class FailureTypeView(ModelView):
+    datamodel = SQLAInterface(FailureType)
+    related_views = [BugsView]
+
+class FailureStatusView(ModelView):
+    datamodel = SQLAInterface(FailureStatus)
+    related_views = [BugsView]
 
 def pretty_month_year(value):
     return calendar.month_name[value.month] + " " + str(value.year)
@@ -198,6 +206,12 @@ appbuilder.add_view(
 appbuilder.add_view(BugsPubView, "List Know Failures", icon="fa-folder-open-o",category="TestBugs")
 appbuilder.add_view(
     BugsView, "Edit Know Failures", icon="fa-envelope", category="Management"
+)
+appbuilder.add_view(
+    FailureTypeView, "Edit Know Failures Types", icon="fa-envelope", category="Management"
+)
+appbuilder.add_view(
+    FailureStatusView, "Edit Failures Status List", icon="fa-envelope", category="Management"
 )
 appbuilder.add_separator("Management")
 
