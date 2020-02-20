@@ -6,9 +6,9 @@ from flask_appbuilder.security.sqla.models import User
 from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text, Date
 from sqlalchemy.orm import relationship
 
-class Report(Model):
+class EC2_Report(Model):
     '''
-    table for storing ec2 project
+    table for storing ec2 project log
     '''
     log_id = Column(Integer, primary_key=True)
     ami_id = Column(String(50))
@@ -27,6 +27,7 @@ class Report(Model):
     pass_rate = Column(Integer)
     test_date =  Column(Date, nullable=True)
     comments = Column(String)
+    platform = Column(String(50))
 
     def __repr__(self):
         return self.log_id

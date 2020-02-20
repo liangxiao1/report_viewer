@@ -2,9 +2,9 @@
 
 Simple application shows the test logs.
 
-## clone the repo
+## Clone the repo
 
-    git clone <https://github.com/liangxiao1/report_viewer.git>
+    git clone https://github.com/liangxiao1/report_viewer.git
 
 ## Swith to repo directory and install required pkgs
 
