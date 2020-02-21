@@ -188,7 +188,7 @@ def report_writer():
             pass_rate = instances_sub_report[instance_type]['cases_pass'] / \
                 (instances_sub_report[instance_type]['cases_total'] -
                  instances_sub_report[instance_type]['cases_cancel'])
-            instances_sub_report[instance_type]['pass_rate'] = '{:.2%}'.format(
+            instances_sub_report[instance_type]['pass_rate'] = '{:.2}'.format(
                 pass_rate)
 
     for instance_type in instances_sub_report:
