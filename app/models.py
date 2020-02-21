@@ -39,6 +39,7 @@ class EC2_Report(Model):
             '">result</a>'
         )
 
+
 class FailureType(Model):
     '''
     general use: table for specify failure types, eg. product_bug, tool_bug, env_bug
@@ -49,6 +50,7 @@ class FailureType(Model):
 
     def __repr__(self):
         return self.name
+
 
 class FailureStatus(Model):
     '''
@@ -61,6 +63,7 @@ class FailureStatus(Model):
     def __repr__(self):
         return self.name
 
+
 class Bugs(Model):
     '''
     general use: table for recording all test failures.
@@ -68,19 +71,21 @@ class Bugs(Model):
     id = Column(Integer, primary_key=True)
     test_suite = Column(String(50))
     case_name = Column(String(50))
-    bug_id = Column(Integer,nullable=True)
-    bug_title = Column(String(200),nullable=True)
-    failure_id = Column(Integer, ForeignKey("failure_status.id"), nullable=False)
+    bug_id = Column(Integer, nullable=True)
+    bug_title = Column(String(200), nullable=True)
+    failure_id = Column(Integer, ForeignKey(
+        "failure_status.id"), nullable=False)
     failure_status = relationship("FailureStatus")
-    branch_name = Column(String(50),nullable=True)
+    branch_name = Column(String(50), nullable=True)
     comments = Column(Text)
-    last_update =  Column(Date)
-    create_date =  Column(Date)
-    failure_type_id = Column(Integer, ForeignKey("failure_type.id"), nullable=False)
+    last_update = Column(Date)
+    create_date = Column(Date)
+    failure_type_id = Column(Integer, ForeignKey(
+        "failure_type.id"), nullable=False)
     failure_type = relationship("FailureType")
     identify_keywords = Column(Text)
     identify_debuglog = Column(Text)
-    contactor = Column(String(50),nullable=True)
+    contactor = Column(String(50), nullable=True)
 
     def __repr__(self):
         return self.log_id
