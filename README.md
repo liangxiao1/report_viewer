@@ -1,23 +1,35 @@
-Composite keys Example
-----------------------
+# Report Viewer Quick Start
 
-Simple application showing the test logs.
+Simple application shows the test logs.
 
-Install flaskapp
+## Clone the repo
 
-    $ sudo yum install -y python3-flask
-    $ pip3 install flask_appbuilder --user
+    git clone https://github.com/liangxiao1/report_viewer.git
 
-Create an Admin user::
+## Swith to repo directory and install required pkgs
 
-    $ flask-3 fab create-admin
+    cd report_viewer
+    pip install -r requirements.txt
 
-Run it::
+## Create an Admin user(only required at first run)
 
-    $ flask-3 run -h 0.0.0.0 -p 5000
+    flask fab create-admin
+
+## Start the app
+
+    flask run -h 0.0.0.0 -p 5000
+
+## Access it via below link
+
+    http://$ip:5000
+
+## References
+
+### - *[Flask-AppBuilder](https://flask-appbuilder.readthedocs.io/en/latest/index.html)*
 
 
-# Report Viewer in container
+
+# Report Viewer in Container
 
 Download app
 
