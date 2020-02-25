@@ -20,18 +20,20 @@ podman run --name report_viewer \
 Install flaskapp
 
 ```
-dnf install -y python3-flask
+dnf install -y python3-flask python3-pip
 pip3 install flask_appbuilder
 ```
 
 Create an Admin user
 
 ```
+cd /data/report_viewer
 flask-3 fab create-admin
 ```
 
 Run flaskapp instance
 
 ```
+cd /data/report_viewer
 flask-3 run -h 0.0.0.0 -p 5000
 ```
