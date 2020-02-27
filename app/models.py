@@ -95,6 +95,41 @@ class Bugs(Model):
         else:
             return self.bug_id
 
+class TestCases(Model):
+    '''
+    table for store general cases in all project.
+    '''
+    case_id = Column(Integer, primary_key=True)
+    case_title = Column(String)
+    case_description = Column(Text)
+    case_keycmd = Column(Text)
+    ec2_repo = Column(String)
+    ec2_casename = Column(String(100))
+    ec2_owner = Column(String(50))
+    ec2_comments = Column(String)
+    azure_repo = Column(String)
+    azure_casename = Column(String(100))
+    azure_owner = Column(String(50))
+    azure_comments = Column(String)
+    ali_repo = Column(String)
+    ali_casename = Column(String(100))
+    ali_owner = Column(String(50))
+    ali_comments= Column(String)
+    esx_repo = Column(String)
+    esx_casename = Column(String(100))
+    esx_owner = Column(String(50))
+    esx_comments = Column(String)
+    hyperv_repo = Column(String)
+    hyperv_casename = Column(String(100))
+    hyperv_owner = Column(String(50))
+    hyperv_comments = Column(String)
+    create_date =  Column(Date, nullable=True)
+    last_update =  Column(Date, nullable=True)
+    create_by =  Column(String(50))
+    comments = Column(Text)
+
+    def __repr__(self):
+        return self.case_id
 
 class Client(User):
     __tablename__ = "ab_user"

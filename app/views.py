@@ -4,7 +4,7 @@ from flask_appbuilder.widgets import ListBlock, ShowBlockWidget
 
 
 from . import appbuilder, db
-from .models import EC2_Report, Bugs, FailureType, FailureStatus
+from .models import EC2_Report, Bugs, FailureType, FailureStatus, TestCases
 
 #Below import is for charts
 import calendar
@@ -198,6 +198,29 @@ class TestBugsByCaseChartView(GroupByChartView):
         },
     ]
 
+class TestCasesView(ModelView):
+    datamodel = SQLAInterface(TestCases)
+    base_permissions = ["can_list", "can_show","menu_access","can_add","can_edit"]
+    list_columns = ["case_id","case_title",
+    "ec2_casename","azure_casename","ali_casename","esx_casename",
+    "hyperv_casename","create_date",
+    "create_by"]
+    search_columns = ["case_id","case_title","case_description","case_keycmd","ec2_repo",
+    "ec2_casename","ec2_owner","ec2_comments","azure_repo","azure_casename","azure_owner",
+    "azure_comments","ali_repo","ali_casename","ali_owner","ali_comments","esx_repo","esx_casename","esx_owner",
+    "esx_comments","hyperv_repo","hyperv_casename","hyperv_owner","hyperv_comments","create_date","last_update",
+    "create_by","comments"]
+
+    show_fieldsets = [
+        ("Summary", {"fields": ["case_id","case_title","case_description","case_keycmd","ec2_repo",
+    "ec2_casename","ec2_owner","ec2_comments","azure_repo","azure_casename","azure_owner",
+    "azure_comments","ali_repo","ali_casename","ali_owner","ali_comments","esx_repo","esx_casename","esx_owner",
+    "esx_comments","hyperv_repo","hyperv_casename","hyperv_owner","hyperv_comments","create_date","last_update",
+    "create_by","comments"]}),
+        ("Description", {"fields": ["description"], "expanded": True}),
+    ]
+    base_order = ("case_id", "desc")
+
 db.create_all()
 appbuilder.add_view(EC2_ReportPubView, "EC2 Test Reports", icon="fa-folder-open-o",category="TestReports")
 appbuilder.add_view(
@@ -225,6 +248,7 @@ appbuilder.add_view(
 appbuilder.add_view(
     TestBugsByCaseChartView, "Test Bugs by Case", icon="fa-folder-open-o", category="DataAnalyze"
 )
+appbuilder.add_view(TestCasesView(), "GernalCasesTrack")
 
 #appbuilder.add_separator("TestReports")
 #appbuilder.add_separator("Management")
