@@ -16,40 +16,78 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-
 LOG = logging.getLogger(__name__)
 
-logging.basicConfig(level=logging.DEBUG,format='%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(levelname)s:%(message)s')
 
 ARG_PARSER = argparse.ArgumentParser(description="Write results to local db")
-ARG_PARSER.add_argument('--dir', dest='log_dir', action='store', help="specify log directory", default=None, required=True)
-ARG_PARSER.add_argument('--db_file', dest='db_file', action='store',
-                        help="specify database location", default=None, required=True)
-ARG_PARSER.add_argument("--ami-id", dest='ami_id', action='store',
-                        help="specify ami id", default=None, required=False)
-ARG_PARSER.add_argument("--compose-id", dest='compose_id', action='store',
-                        help="specify compose id if have", default=None, required=False)
-ARG_PARSER.add_argument("--instance_available_date", dest='instance_available_date', action='store',
-                        help="specify it if it is new", default=None, required=False)
-ARG_PARSER.add_argument("--pkg_ver", dest='pkg_ver', action='store',
-                        help="specify pkg version, like kernel or others", default=None,
+ARG_PARSER.add_argument('--dir',
+                        dest='log_dir',
+                        action='store',
+                        help="specify log directory",
+                        default=None,
+                        required=True)
+ARG_PARSER.add_argument('--db_file',
+                        dest='db_file',
+                        action='store',
+                        help="specify database location",
+                        default=None,
+                        required=True)
+ARG_PARSER.add_argument("--ami-id",
+                        dest='ami_id',
+                        action='store',
+                        help="specify ami id",
+                        default=None,
                         required=False)
-ARG_PARSER.add_argument("--bug-id", dest='bug_id', action='store',
-                        help="specify bug id if have", default=None, required=False)
-ARG_PARSER.add_argument("--report_url", dest='report_url', action='store',
-                        help="specify log url", default=None, required=True)
-ARG_PARSER.add_argument("--branch_name", dest='branch_name', action='store',
-                        help="specify branch name, like RHEL6|7|8", default=None, required=True)
-ARG_PARSER.add_argument("--comments", dest='comments', action='store',
-                        help="more information if have", default=None, required=False)
+ARG_PARSER.add_argument("--compose-id",
+                        dest='compose_id',
+                        action='store',
+                        help="specify compose id if have",
+                        default=None,
+                        required=False)
+ARG_PARSER.add_argument("--instance_available_date",
+                        dest='instance_available_date',
+                        action='store',
+                        help="specify it if it is new",
+                        default=None,
+                        required=False)
+ARG_PARSER.add_argument("--pkg_ver",
+                        dest='pkg_ver',
+                        action='store',
+                        help="specify pkg version, like kernel or others",
+                        default=None,
+                        required=False)
+ARG_PARSER.add_argument("--bug-id",
+                        dest='bug_id',
+                        action='store',
+                        help="specify bug id if have",
+                        default=None,
+                        required=False)
+ARG_PARSER.add_argument("--report_url",
+                        dest='report_url',
+                        action='store',
+                        help="specify log url",
+                        default=None,
+                        required=True)
+ARG_PARSER.add_argument("--branch_name",
+                        dest='branch_name',
+                        action='store',
+                        help="specify branch name, like RHEL6|7|8",
+                        default=None,
+                        required=True)
+ARG_PARSER.add_argument("--comments",
+                        dest='comments',
+                        action='store',
+                        help="more information if have",
+                        default=None,
+                        required=False)
 ARGS = ARG_PARSER.parse_args()
-
 
 DB_ENGINE = create_engine('sqlite:///%s' % ARGS.db_file, echo=True)
 DB_SESSION = sessionmaker(bind=DB_ENGINE)
 DB_BASE = declarative_base()
-JOB_XML = ARGS.log_dir+"/results.xml"
-JOB_LOG = ARGS.log_dir+"/job.log"
+JOB_XML = ARGS.log_dir + "/results.xml"
+JOB_LOG = ARGS.log_dir + "/job.log"
 
 # pylint: disable=R0902,R0903
 
@@ -82,13 +120,15 @@ class Report(DB_BASE):
 
 def get_ami_id():
     '''
-    If no ami_id provided from parameters, then try to get it from the test log.
+    If no ami_id provided from parameters, then try to get it from the test
+    log.
     '''
     if ARGS.ami_id is None:
         ami_id = None
         LOG.info('no ami_id specified, try to get it from results.xml')
         #
-        # results.xml:16:30:53 DEBUG| PARAMS (key=id, path=*/Image/*, default=None) => 'm-hp365vdveyu84smo4jfu'
+        # results.xml:16:30:53 DEBUG| PARAMS (key=id, path=*/Image/*, default=
+        # None) => 'm-hp365vdveyu84smo4jfu'
         #
         with open(JOB_XML) as file_handler:
             for line in file_handler.readlines():
@@ -114,13 +154,15 @@ def get_ami_id():
 
 def get_pkg_ver():
     '''
-    If no pkg_ver provided from parameters, then try to get kernel version from the test log.
+    If no pkg_ver provided from parameters, then try to get kernel version
+    from the test log.
     The pkg_ver maybe a cloud-init or others if required.
     '''
     if ARGS.pkg_ver is None:
         pkg_ver = None
-        LOG.info('no pkg_ver specified, try to get it from log, use kernel version instead \
-from %s', JOB_XML)
+        LOG.info(
+            'no pkg_ver specified, try to get it from log, \
+use kernel version instead from %s', JOB_XML)
         with open(JOB_XML) as file_handler:
             for line in file_handler.readlines():
                 # pylint: disable=W1401
@@ -132,8 +174,9 @@ from %s', JOB_XML)
                     break
         if pkg_ver is None:
             pkg_ver = None
-            LOG.info('no pkg_ver specified, try to get it from log, use kernel version instead \
-from %s', JOB_LOG)
+            LOG.info(
+                'no pkg_ver specified, try to get it from log, \
+use kernel version instead from %s', JOB_LOG)
             with open(JOB_LOG) as file_handler:
                 for line in file_handler.readlines():
                     # pylint: disable=W1401
@@ -144,10 +187,10 @@ from %s', JOB_LOG)
                         LOG.info('find %s', pkg_ver)
                         break
         if pkg_ver is None:
-            #LOG.info('cannot get pkg_ver, exit!')
+            # LOG.info('cannot get pkg_ver, exit!')
             # sys.exit(1)
             pkg_ver = 'unknown'
-        ARGS.pkg_ver = 'kernel-'+pkg_ver
+        ARGS.pkg_ver = 'kernel-' + pkg_ver
 
 
 def report_writer():
@@ -156,13 +199,13 @@ def report_writer():
     '''
     instances_sub_report = {}
 
-    log_json = ARGS.log_dir+"/results.json"
+    log_json = ARGS.log_dir + "/results.json"
     with open(log_json, 'r') as file_handler:
         report_dict = json.load(file_handler)
         # print(report_dict)
         print(report_dict['debuglog'])
-        test_date = re.findall(
-            '[0-9]{4}-[0-9]{2}-[0-9]{2}', report_dict['debuglog'])
+        test_date = re.findall('[0-9]{4}-[0-9]{2}-[0-9]{2}',
+                               report_dict['debuglog'])
         for test_item in report_dict['tests']:
             #
             # 0001-/data/avocado-cloud/tests/alibaba/test_functional_lifecyc \
@@ -170,18 +213,25 @@ def report_writer():
             # k-ecs.hfg5.xlarge-Image-NIC-VSwitch-SecurityGroup-password-use \
             # rname-VM-dac1
             #
-            instance_type = re.findall(
-                'Cloud-Credential-Disk-(.*)-Image', test_item['id'])[0]
+            instance_type = re.findall('Cloud-Credential-Disk-(.*)-Image',
+                                       test_item['id'])[0]
             if instance_type not in instances_sub_report:
                 instances_sub_report[instance_type] = {
-                    'cases_other': 0, 'cases_pass': 0, 'cases_fail': 0, 'cases_cancel': 0,
-                    'cases_total': 0, 'test_date': test_date, 'pass_rate': 0}
+                    'cases_other': 0,
+                    'cases_pass': 0,
+                    'cases_fail': 0,
+                    'cases_cancel': 0,
+                    'cases_total': 0,
+                    'test_date': test_date,
+                    'pass_rate': 0
+                }
             instances_sub_report[instance_type]['cases_total'] += 1
             if 'PASS' in test_item['status']:
                 instances_sub_report[instance_type]['cases_pass'] += 1
             elif 'FAIL' in test_item['status']:
                 instances_sub_report[instance_type]['cases_fail'] += 1
-            elif "CANCEL" in test_item['status'] or "SKIP" in test_item['status']:
+            elif "CANCEL" in test_item['status'] or "SKIP" in test_item[
+                    'status']:
                 instances_sub_report[instance_type]['cases_cancel'] += 1
             else:
                 instances_sub_report[instance_type]['cases_other'] += 1
@@ -206,7 +256,8 @@ def report_writer():
         report.platform = 'alibaba'
         report.cases_pass = instances_sub_report[instance_type]['cases_pass']
         report.cases_fail = instances_sub_report[instance_type]['cases_fail']
-        report.cases_cancel = instances_sub_report[instance_type]['cases_cancel']
+        report.cases_cancel = instances_sub_report[instance_type][
+            'cases_cancel']
         report.cases_other = instances_sub_report[instance_type]['cases_other']
         report.cases_total = instances_sub_report[instance_type]['cases_total']
         report.pass_rate = instances_sub_report[instance_type]['pass_rate']
