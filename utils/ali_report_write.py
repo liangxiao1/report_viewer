@@ -242,6 +242,12 @@ def report_writer():
                     instances_sub_report[instance_type]['cases_cancel'])
             instances_sub_report[instance_type]['pass_rate'] = pass_rate
 
+        # Remove the tuple if the instance type isn't available
+        for instance_type in list(instances_sub_report.keys()):
+            if instances_sub_report[instance_type]['cases_pass'] == 0 \
+                    and instances_sub_report[instance_type]['cases_fail'] == 0:
+                instances_sub_report.pop(instance_type)
+
     for instance_type in instances_sub_report:
         print(instance_type, instances_sub_report[instance_type])
         report = Report()
