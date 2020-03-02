@@ -1,12 +1,8 @@
 # /usr/bin/env python
 '''
 Write avocado-cloud test log to sqlite
-<<<<<<< b81ec7964bf370dcf43062f080735fd2b5add4b9
 ec2_report_write.py : https://github.com/liangxiao1/mini_utils
 ali_report_write.py : https://github.com/liangxiao1/report_viewer/utils
-=======
-github : https://github.com/liangxiao1/mini_utils
->>>>>>> Add Alibaba support. (#2)
 
 '''
 from __future__ import print_function
@@ -23,12 +19,10 @@ from sqlalchemy.orm import sessionmaker
 
 LOG = logging.getLogger(__name__)
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.DEBUG,format='%(levelname)s:%(message)s')
 
 ARG_PARSER = argparse.ArgumentParser(description="Write results to local db")
-ARG_PARSER.add_argument('--dir', dest='log_dir', action='store',
-                        help="specify log directory", default=None, required=True)
+ARG_PARSER.add_argument('--dir', dest='log_dir', action='store', help="specify log directory", default=None, required=True)
 ARG_PARSER.add_argument('--db_file', dest='db_file', action='store',
                         help="specify database location", default=None, required=True)
 ARG_PARSER.add_argument("--ami-id", dest='ami_id', action='store',
@@ -64,11 +58,7 @@ class Report(DB_BASE):
     '''
     The table's schema definication.
     '''
-<<<<<<< b81ec7964bf370dcf43062f080735fd2b5add4b9
     __tablename__ = 'aliyun_report'
-=======
-    __tablename__ = 'report'
->>>>>>> Add Alibaba support. (#2)
     log_id = Column(Integer, primary_key=True)
     ami_id = Column(String)
     instance_type = Column(String)
@@ -86,10 +76,7 @@ class Report(DB_BASE):
     pass_rate = Column(Integer)
     test_date = Column(String)
     comments = Column(String)
-<<<<<<< b81ec7964bf370dcf43062f080735fd2b5add4b9
     platform = Column(String)
-=======
->>>>>>> Add Alibaba support. (#2)
     sqlite_autoincrement = True
 
 
@@ -216,10 +203,7 @@ def report_writer():
         report.report_url = ARGS.report_url
         report.branch_name = ARGS.branch_name
         report.comments = ARGS.comments
-<<<<<<< b81ec7964bf370dcf43062f080735fd2b5add4b9
         report.platform = 'alibaba'
-=======
->>>>>>> Add Alibaba support. (#2)
         report.cases_pass = instances_sub_report[instance_type]['cases_pass']
         report.cases_fail = instances_sub_report[instance_type]['cases_fail']
         report.cases_cancel = instances_sub_report[instance_type]['cases_cancel']
