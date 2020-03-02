@@ -40,7 +40,7 @@ class EC2_Report(Model):
 
 class AliyunReport(Model):
     '''
-    table for storing Alibaba Cloud project
+    table for storing Aliyun project
     '''
     __tablename__ = 'aliyun_report'
     log_id = Column(Integer, primary_key=True)
@@ -72,7 +72,7 @@ class AliyunReport(Model):
 
 class Ali_Report(Model):
     '''
-    table for storing Alibaba Cloud project
+    table for storing Aliyun project
     '''
     log_id = Column(Integer, primary_key=True)
     ami_id = Column(String(50))
