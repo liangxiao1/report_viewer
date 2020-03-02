@@ -40,7 +40,7 @@ class EC2_Report(Model):
         )
 
 
-class AliReport(Model):
+class Ali_Report(Model):
     '''
     table for storing Alibaba Cloud project
     '''
