@@ -1,9 +1,9 @@
 from flask import Markup, url_for
 from flask_appbuilder import Model
 from flask_appbuilder.filemanager import ImageManager
-from flask_appbuilder.models.mixins import ImageColumn
+from flask_appbuilder.models.mixins import ImageColumn, BaseMixin
 from flask_appbuilder.security.sqla.models import User
-from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text, Date
+from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text, Date, MetaData
 from sqlalchemy.orm import relationship
 
 class EC2_Report(Model):
@@ -71,6 +71,39 @@ class Ali_Report(Model):
             '<a href="' +
             self.report_url +
             '">result</a>'
+        )
+
+
+class AzureReport(Model):
+    '''
+    Table for Azure RHEL project log
+    '''
+    __tablename__ = "azure_rhel_report"
+    index = Column(Integer, primary_key=True)
+    rhel = Column(String(20))
+    version = Column(String(50))
+    vm_size = Column(String(50))
+    automation_tool = Column(String(50))
+    result = Column(String(20))
+    tests = Column(Integer)
+    failures = Column(Integer)
+    errors = Column(Integer)
+    skipped = Column(Integer)
+    failed_cases = Column(String)
+    rerun_failed_cases = Column(String)
+    duration = Column(Integer)
+    finished_time =  Column(Date, nullable=True)
+    log = Column(String)
+    platform = Column(String(20))
+    
+    def __repr__(self):
+        return self.index
+
+    def log_link(self):
+        return Markup(
+            '<a href="' +
+            self.log +
+            '">log</a>'
         )
 
 

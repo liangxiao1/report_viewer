@@ -1,10 +1,12 @@
 from flask_appbuilder.models.sqla.interface import SQLAInterface
-from flask_appbuilder.views import ModelView
+from flask_appbuilder.views import ModelView, CompactCRUDMixin, MasterDetailView
 from flask_appbuilder.widgets import ListBlock, ShowBlockWidget
+from flask_appbuilder import MultipleView
 
 
 from . import appbuilder, db
-from .models import EC2_Report, Ali_Report, Bugs, FailureType, FailureStatus, TestCases
+from .models import EC2_Report, Ali_Report, AzureReport, Bugs, FailureType, FailureStatus, TestCases
+
 
 #Below import is for charts
 import calendar
@@ -320,8 +322,29 @@ class TestCasesView(ModelView):
     ]
     base_order = ("case_id", "desc")
 
+class AzureReportView(ModelView):
+    datamodel = SQLAInterface(AzureReport)
+    base_permissions = ["can_list", "can_show","menu_access"]
+    label_columns = {"log": "Result"}
+    list_columns = ["rhel", "version", "vm_size",
+"result", "tests", "failures", "errors", "skipped",
+"finished_time", "log_link"]
+    search_columns = ["rhel", "version", "vm_size", "automation_tool",
+"result", "tests", "failures", "errors", "skipped",
+"finished_time"]
+
+    show_fieldsets = [
+        ("Summary", {"fields": ["rhel", "version", "vm_size", "automation_tool",
+"result", "tests", "failures", "errors", "skipped",
+"failed_cases", "rerun_failed_cases", "duration", "finished_time", "log_link"]}),
+        ("Description", {"fields": ["description"], "expanded": True}),
+    ]
+    base_order = ("finished_time", "desc")
+
+
 db.create_all()
 appbuilder.add_view(EC2_ReportPubView, "EC2 Test Reports", icon="fa-folder-open-o",category="TestReports")
+appbuilder.add_view(AzureReportView, "Azure Test Reports", icon="fa-folder-open-o", category="TestReports")
 appbuilder.add_view(
     EC2_ReportView, "Edit EC2 Test Reports", icon="fa-envelope", category="Management"
 )
