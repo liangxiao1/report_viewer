@@ -291,18 +291,18 @@ class EC2_TestRunChartView(DirectByChartView):
 
 class AliyunTestRunChartView(DirectByChartView):
     datamodel = SQLAInterface(AliyunReport)
-    chart_title = "Alibaba Cloud Test Per Run"
+    chart_title = "Aliyun Test Per Run"
     chart_type = 'LineChart'
 
     definitions = [
         {
-            "label": "Alibaba Cloud Pass Rate",
+            "label": "Aliyun Pass Rate",
             "group": "test_date",
             "series": ["pass_rate"],
         },
         {
             "label":
-            "Alibaba Cloud Test Per Run",
+            "Aliyun Test Per Run",
             "group":
             "test_date",
             "series": [
@@ -361,26 +361,26 @@ class EC2_TestSumChartView(GroupByChartView):
 
 class AliyunTestSumChartView(GroupByChartView):
     datamodel = SQLAInterface(AliyunReport)
-    chart_title = "Alibaba Cloud Test Sum"
+    chart_title = "Aliyun Test Sum"
     chart_type = 'LineChart'
 
     definitions = [
         {
-            "label": "Alibaba Cloud Test By Day",
+            "label": "Aliyun Test By Day",
             "group": "test_date",
             "series": [
                 (aggregate_sum, "cases_total"),
             ],
         },
         {
-            "label": "Alibaba Cloud Test By Instance",
+            "label": "Aliyun Test By Instance",
             "group": "instance_type",
             "series": [
                 (aggregate_count, "instance_type"),
             ],
         },
         {
-            "label": "Alibaba Cloud Test By Compose ID",
+            "label": "Aliyun Test By Compose ID",
             "group": "compose_id",
             "series": [
                 (aggregate_count, "compose_id"),
@@ -486,11 +486,11 @@ appbuilder.add_view(EC2_ReportView,
                     category="Management")
 
 appbuilder.add_view(AliyunReportPubView,
-                    "Alibaba Cloud Test Reports",
+                    "Aliyun Test Reports",
                     icon="fa-folder-open-o",
                     category="TestReports")
 appbuilder.add_view(AliyunReportView,
-                    "Edit Alibaba Cloud Test Reports",
+                    "Edit Aliyun Test Reports",
                     icon="fa-envelope",
                     category="Management")
 
@@ -527,11 +527,11 @@ appbuilder.add_view(EC2_TestSumChartView,
                     category="DataAnalyze")
 
 appbuilder.add_view(AliyunTestRunChartView,
-                    "Alibaba Cloud Test Per Run",
+                    "Aliyun Test Per Run",
                     icon="fa-folder-open-o",
                     category="DataAnalyze")
 appbuilder.add_view(AliyunTestSumChartView,
-                    "Alibaba Cloud Test Sum",
+                    "Aliyun Test Sum",
                     icon="fa-folder-open-o",
                     category="DataAnalyze")
 
