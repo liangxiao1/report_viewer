@@ -1,7 +1,8 @@
 # /usr/bin/env python
 '''
 Write avocado-cloud test log to sqlite
-github : https://github.com/liangxiao1/mini_utils
+ec2_report_write.py : https://github.com/liangxiao1/mini_utils
+ali_report_write.py : https://github.com/liangxiao1/report_viewer/utils
 
 '''
 from __future__ import print_function
@@ -59,7 +60,7 @@ class Report(DB_BASE):
     '''
     The table's schema definication.
     '''
-    __tablename__ = 'report'
+    __tablename__ = 'aliyun_report'
     log_id = Column(Integer, primary_key=True)
     ami_id = Column(String)
     instance_type = Column(String)
