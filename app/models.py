@@ -44,6 +44,7 @@ class Ali_Report(Model):
     '''
     table for storing Alibaba Cloud project
     '''
+    __tablename__ = 'aliyun_report'
     log_id = Column(Integer, primary_key=True)
     ami_id = Column(String(50))
     instance_type = Column(String(50))
