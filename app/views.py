@@ -4,7 +4,7 @@ from flask_appbuilder.widgets import ListBlock, ShowBlockWidget
 
 
 from . import appbuilder, db
-from .models import EC2_Report, Bugs, FailureType, FailureStatus, TestCases
+from .models import EC2_Report, Ali_Report, Bugs, FailureType, FailureStatus, TestCases
 
 #Below import is for charts
 import calendar
@@ -41,6 +41,51 @@ class EC2_ReportPubView(ModelView):
 
 class EC2_ReportView(ModelView):
     datamodel = SQLAInterface(EC2_Report)
+    base_permissions = ["can_list", "can_show","menu_access","can_add","can_edit","can_delete"]
+    label_columns = {"result_url": "Result"}
+    list_columns = ["log_id", "instance_type", "instance_available_date", "compose_id", "pkg_ver",
+"bug_id", "branch_name", "cases_pass", "cases_fail", "cases_cancel",
+"cases_other", "cases_total", "pass_rate", "test_date", "comments"]
+    search_columns = ["log_id", "ami_id", "instance_type", "instance_available_date", "compose_id", "pkg_ver",
+"bug_id", "branch_name", "cases_pass", "cases_fail", "cases_cancel",
+"cases_other", "cases_total", "pass_rate", "test_date", "comments","platform"]
+
+    show_fieldsets = [
+        ("Summary", {"fields": ["log_id", "ami_id", "instance_type", "instance_available_date", "compose_id", "pkg_ver",
+"bug_id", "result_url", "branch_name", "cases_pass", "cases_fail", "cases_cancel",
+"cases_other", "cases_total", "pass_rate", "test_date", "comments","platform"]}),
+        ("Description", {"fields": ["description"], "expanded": True}),
+    ]
+    base_order = ("log_id", "desc")
+
+class Ali_ReportPubView(ModelView):
+    datamodel = SQLAInterface(Ali_Report)
+    base_permissions = ["can_list", "can_show","menu_access"]
+    #list_widget = ListBlock
+    #show_widget = ShowBlockWidget
+
+    label_columns = {"result_url": "Result"}
+
+    list_columns = ["log_id", "instance_type", "instance_available_date", "compose_id", "pkg_ver",
+"bug_id", "branch_name", "cases_pass", "cases_fail", "cases_cancel",
+"cases_other", "cases_total", "pass_rate", "test_date"]
+    search_columns = ["log_id", "ami_id", "instance_type", "instance_available_date", "compose_id", "pkg_ver",
+"bug_id", "branch_name", "cases_pass", "cases_fail", "cases_cancel",
+"cases_other", "cases_total", "pass_rate", "test_date", "comments","platform"]
+
+    show_fieldsets = [
+        ("Summary", {"fields": ["log_id", "ami_id", "instance_type", "instance_available_date", "compose_id", "pkg_ver",
+"bug_id", "result_url", "branch_name", "cases_pass", "cases_fail", "cases_cancel",
+"cases_other", "cases_total", "pass_rate", "test_date", "comments","platform"]}),
+        ("Description", {"fields": ["description"], "expanded": True}),
+    ]
+    #base_order = ("log_id", "asc")
+    base_order = ("log_id", "desc")
+    #base_filters = [["created_by", FilterEqualFunction, get_user]]
+
+
+class Ali_ReportView(ModelView):
+    datamodel = SQLAInterface(Ali_Report)
     base_permissions = ["can_list", "can_show","menu_access","can_add","can_edit","can_delete"]
     label_columns = {"result_url": "Result"}
     list_columns = ["log_id", "instance_type", "instance_available_date", "compose_id", "pkg_ver",
@@ -141,6 +186,31 @@ class EC2_TestRunChartView(DirectByChartView):
 #        },
 ]
 
+class Ali_TestRunChartView(DirectByChartView):
+    datamodel = SQLAInterface(Ali_Report)
+    chart_title = "Alibaba Cloud Test Per Run"
+    chart_type = 'LineChart'
+
+    definitions = [
+        {
+            "label": "Alibaba Cloud Pass Rate",
+            "group": "test_date",
+            "series": [
+                "pass_rate"
+            ],
+        },
+        {
+            "label": "Alibaba Cloud Test Per Run",
+            "group": "test_date",
+            "series": [
+                "cases_total",
+                "cases_pass",
+                "cases_fail",
+                "cases_cancel",
+                "cases_other",
+            ],
+        },
+]
 
 #@aggregate(label='Total diff')
 #def aggregate_total(items, col):
@@ -176,6 +246,35 @@ class EC2_TestSumChartView(GroupByChartView):
         },
         {
             "label": "EC2 Test By Compose ID",
+            "group": "compose_id",
+            "series": [
+                (aggregate_count, "compose_id"),
+            ],
+        },
+    ]
+
+class Ali_TestSumChartView(GroupByChartView):
+    datamodel = SQLAInterface(Ali_Report)
+    chart_title = "Alibaba Cloud Test Sum"
+    chart_type = 'LineChart'
+
+    definitions = [
+        {
+            "label": "Alibaba Cloud Test By Day",
+            "group": "test_date",
+            "series": [
+                (aggregate_sum, "cases_total"),
+            ],
+        },
+        {
+            "label": "Alibaba Cloud Test By Instance",
+            "group": "instance_type",
+            "series": [
+                (aggregate_count, "instance_type"),
+            ],
+        },
+        {
+            "label": "Alibaba Cloud Test By Compose ID",
             "group": "compose_id",
             "series": [
                 (aggregate_count, "compose_id"),
@@ -222,10 +321,16 @@ class TestCasesView(ModelView):
     base_order = ("case_id", "desc")
 
 db.create_all()
-appbuilder.add_view(EC2_ReportPubView, "EC2 Test Reports", icon="fa-folder-open-o",category="TestReports")
+appbuilder.add_view(EC2_ReportPubView, "Alibaba Cloud Test Reports", icon="fa-folder-open-o",category="TestReports")
 appbuilder.add_view(
-    EC2_ReportView, "Edit EC2 Test Reports", icon="fa-envelope", category="Management"
+    EC2_ReportView, "Edit Alibaba Cloud Test Reports", icon="fa-envelope", category="Management"
 )
+
+appbuilder.add_view(Ali_ReportPubView, "Alibaba Cloud Test Reports", icon="fa-folder-open-o",category="TestReports")
+appbuilder.add_view(
+    Ali_ReportView, "Edit Alibaba Cloud Test Reports", icon="fa-envelope", category="Management"
+)
+
 appbuilder.add_view(BugsPubView, "List Know Failures", icon="fa-folder-open-o",category="TestBugs")
 appbuilder.add_view(
     BugsView, "Edit Know Failures", icon="fa-envelope", category="Management"
@@ -243,6 +348,13 @@ appbuilder.add_view(
 )
 appbuilder.add_view(
     EC2_TestSumChartView, "EC2 Test Sum", icon="fa-folder-open-o", category="DataAnalyze"
+)
+
+appbuilder.add_view(
+    Ali_TestRunChartView, "Alibaba Cloud Test Per Run", icon="fa-folder-open-o", category="DataAnalyze"
+)
+appbuilder.add_view(
+    Ali_TestSumChartView, "Alibaba Cloud Test Sum", icon="fa-folder-open-o", category="DataAnalyze"
 )
 
 appbuilder.add_view(

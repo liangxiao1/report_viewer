@@ -27,6 +27,7 @@ class EC2_Report(Model):
     pass_rate = Column(Integer)
     test_date = Column(Date, nullable=True)
     comments = Column(String)
+    platform = Column(String(50))
 
     def __repr__(self):
         return self.log_id
@@ -39,7 +40,7 @@ class EC2_Report(Model):
         )
 
 
-class AliReport(Model):
+class Ali_Report(Model):
     '''
     table for storing Alibaba Cloud project
     '''
