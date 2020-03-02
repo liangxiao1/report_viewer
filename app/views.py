@@ -321,9 +321,9 @@ class TestCasesView(ModelView):
     base_order = ("case_id", "desc")
 
 db.create_all()
-appbuilder.add_view(EC2_ReportPubView, "Alibaba Cloud Test Reports", icon="fa-folder-open-o",category="TestReports")
+appbuilder.add_view(EC2_ReportPubView, "EC2 Test Reports", icon="fa-folder-open-o",category="TestReports")
 appbuilder.add_view(
-    EC2_ReportView, "Edit Alibaba Cloud Test Reports", icon="fa-envelope", category="Management"
+    EC2_ReportView, "Edit EC2 Test Reports", icon="fa-envelope", category="Management"
 )
 
 appbuilder.add_view(Ali_ReportPubView, "Alibaba Cloud Test Reports", icon="fa-folder-open-o",category="TestReports")
