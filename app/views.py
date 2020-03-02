@@ -5,7 +5,7 @@ from flask_appbuilder import MultipleView
 
 
 from . import appbuilder, db
-from .models import EC2_Report, Ali_Report, AzureReport, Bugs, FailureType, FailureStatus, TestCases
+from .models import EC2_Report, AliyunReport, AzureReport, Bugs, FailureType, FailureStatus, TestCases
 
 
 #Below import is for charts
@@ -60,8 +60,8 @@ class EC2_ReportView(ModelView):
     ]
     base_order = ("log_id", "desc")
 
-class Ali_ReportPubView(ModelView):
-    datamodel = SQLAInterface(Ali_Report)
+class AliyunReportPubView(ModelView):
+    datamodel = SQLAInterface(AliyunReport)
     base_permissions = ["can_list", "can_show","menu_access"]
     #list_widget = ListBlock
     #show_widget = ShowBlockWidget
@@ -86,8 +86,8 @@ class Ali_ReportPubView(ModelView):
     #base_filters = [["created_by", FilterEqualFunction, get_user]]
 
 
-class Ali_ReportView(ModelView):
-    datamodel = SQLAInterface(Ali_Report)
+class AliyunReportView(ModelView):
+    datamodel = SQLAInterface(AliyunReport)
     base_permissions = ["can_list", "can_show","menu_access","can_add","can_edit","can_delete"]
     label_columns = {"result_url": "Result"}
     list_columns = ["log_id", "instance_type", "instance_available_date", "compose_id", "pkg_ver",
@@ -188,8 +188,8 @@ class EC2_TestRunChartView(DirectByChartView):
 #        },
 ]
 
-class Ali_TestRunChartView(DirectByChartView):
-    datamodel = SQLAInterface(Ali_Report)
+class AliyunTestRunChartView(DirectByChartView):
+    datamodel = SQLAInterface(AliyunReport)
     chart_title = "Alibaba Cloud Test Per Run"
     chart_type = 'LineChart'
 
@@ -255,8 +255,8 @@ class EC2_TestSumChartView(GroupByChartView):
         },
     ]
 
-class Ali_TestSumChartView(GroupByChartView):
-    datamodel = SQLAInterface(Ali_Report)
+class AliyunTestSumChartView(GroupByChartView):
+    datamodel = SQLAInterface(AliyunReport)
     chart_title = "Alibaba Cloud Test Sum"
     chart_type = 'LineChart'
 
@@ -303,19 +303,19 @@ class TestCasesView(ModelView):
     datamodel = SQLAInterface(TestCases)
     base_permissions = ["can_list", "can_show","menu_access","can_add","can_edit"]
     list_columns = ["case_id","case_title",
-    "ec2_casename","azure_casename","ali_casename","esx_casename",
+    "ec2_casename","azure_casename","aliyun_casename","esx_casename",
     "hyperv_casename","create_date",
     "create_by"]
     search_columns = ["case_id","case_title","case_description","case_keycmd","ec2_repo",
     "ec2_casename","ec2_owner","ec2_comments","azure_repo","azure_casename","azure_owner",
-    "azure_comments","ali_repo","ali_casename","ali_owner","ali_comments","esx_repo","esx_casename","esx_owner",
+    "azure_comments","aliyun_repo","aliyun_casename","aliyun_owner","aliyun_comments","esx_repo","esx_casename","esx_owner",
     "esx_comments","hyperv_repo","hyperv_casename","hyperv_owner","hyperv_comments","create_date","last_update",
     "create_by","comments"]
 
     show_fieldsets = [
         ("Summary", {"fields": ["case_id","case_title","case_description","case_keycmd","ec2_repo",
     "ec2_casename","ec2_owner","ec2_comments","azure_repo","azure_casename","azure_owner",
-    "azure_comments","ali_repo","ali_casename","ali_owner","ali_comments","esx_repo","esx_casename","esx_owner",
+    "azure_comments","aliyun_repo","aliyun_casename","aliyun_owner","aliyun_comments","esx_repo","esx_casename","esx_owner",
     "esx_comments","hyperv_repo","hyperv_casename","hyperv_owner","hyperv_comments","create_date","last_update",
     "create_by","comments"]}),
         ("Description", {"fields": ["description"], "expanded": True}),
@@ -344,15 +344,16 @@ class AzureReportView(ModelView):
 
 db.create_all()
 appbuilder.add_view(EC2_ReportPubView, "EC2 Test Reports", icon="fa-folder-open-o",category="TestReports")
-appbuilder.add_view(AzureReportView, "Azure Test Reports", icon="fa-folder-open-o", category="TestReports")
 appbuilder.add_view(
     EC2_ReportView, "Edit EC2 Test Reports", icon="fa-envelope", category="Management"
 )
 
-appbuilder.add_view(Ali_ReportPubView, "Alibaba Cloud Test Reports", icon="fa-folder-open-o",category="TestReports")
+appbuilder.add_view(AliyunReportPubView, "Alibaba Cloud Test Reports", icon="fa-folder-open-o",category="TestReports")
 appbuilder.add_view(
-    Ali_ReportView, "Edit Alibaba Cloud Test Reports", icon="fa-envelope", category="Management"
+    AliyunReportView, "Edit Alibaba Cloud Test Reports", icon="fa-envelope", category="Management"
 )
+
+appbuilder.add_view(AzureReportView, "Azure Test Reports", icon="fa-folder-open-o", category="TestReports")
 
 appbuilder.add_view(BugsPubView, "List Know Failures", icon="fa-folder-open-o",category="TestBugs")
 appbuilder.add_view(
@@ -374,10 +375,10 @@ appbuilder.add_view(
 )
 
 appbuilder.add_view(
-    Ali_TestRunChartView, "Alibaba Cloud Test Per Run", icon="fa-folder-open-o", category="DataAnalyze"
+    AliyunTestRunChartView, "Alibaba Cloud Test Per Run", icon="fa-folder-open-o", category="DataAnalyze"
 )
 appbuilder.add_view(
-    Ali_TestSumChartView, "Alibaba Cloud Test Sum", icon="fa-folder-open-o", category="DataAnalyze"
+    AliyunTestSumChartView, "Alibaba Cloud Test Sum", icon="fa-folder-open-o", category="DataAnalyze"
 )
 
 appbuilder.add_view(

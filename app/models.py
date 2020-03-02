@@ -40,7 +40,7 @@ class EC2_Report(Model):
         )
 
 
-class Ali_Report(Model):
+class AliyunReport(Model):
     '''
     table for storing Alibaba Cloud project
     '''
@@ -184,10 +184,10 @@ class TestCases(Model):
     azure_casename = Column(String(100))
     azure_owner = Column(String(50))
     azure_comments = Column(String)
-    ali_repo = Column(String)
-    ali_casename = Column(String(100))
-    ali_owner = Column(String(50))
-    ali_comments= Column(String)
+    aliyun_repo = Column(String)
+    aliyun_casename = Column(String(100))
+    aliyun_owner = Column(String(50))
+    aliyun_comments= Column(String)
     esx_repo = Column(String)
     esx_casename = Column(String(100))
     esx_owner = Column(String(50))
