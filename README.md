@@ -66,4 +66,3 @@ Run flaskapp instance
 cd /data/report_viewer
 flask-3 run -h 0.0.0.0 -p 5000
 ```
-
