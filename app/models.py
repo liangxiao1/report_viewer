@@ -69,6 +69,41 @@ class AliyunReport(Model):
         return Markup('<a href="' + self.report_url + '">result</a>')
 
 
+
+class Ali_Report(Model):
+    '''
+    table for storing Alibaba Cloud project
+    '''
+    log_id = Column(Integer, primary_key=True)
+    ami_id = Column(String(50))
+    instance_type = Column(String(50))
+    instance_available_date = Column(Date, nullable=True)
+    compose_id = Column(String(50))
+    pkg_ver = Column(String(50))
+    bug_id = Column(String(50))
+    report_url = Column(String)
+    branch_name = Column(String(50))
+    cases_pass = Column(Integer)
+    cases_fail = Column(Integer)
+    cases_cancel = Column(Integer)
+    cases_other = Column(Integer)
+    cases_total = Column(Integer)
+    pass_rate = Column(Integer)
+    test_date = Column(Date, nullable=True)
+    comments = Column(String)
+    platform = Column(String(50))
+
+    def __repr__(self):
+        return self.log_id
+
+    def result_url(self):
+        return Markup(
+            '<a href="' +
+            self.report_url +
+            '">result</a>'
+        )
+
+
 class AzureReport(Model):
     '''
     Table for Azure RHEL project log
@@ -96,6 +131,7 @@ class AzureReport(Model):
 
     def log_link(self):
         return Markup('<a href="' + self.log + '">log</a>')
+
 
 
 class FailureType(Model):

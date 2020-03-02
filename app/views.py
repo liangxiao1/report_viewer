@@ -5,6 +5,7 @@ from flask_appbuilder.widgets import ListBlock, ShowBlockWidget
 from flask_appbuilder import MultipleView
 
 from . import appbuilder, db
+
 from .models import (EC2_Report, AliyunReport, AzureReport, Bugs, FailureType,
                      FailureStatus, TestCases)
 
@@ -538,6 +539,7 @@ appbuilder.add_view(TestBugsByCaseChartView,
                     "Test Bugs by Case",
                     icon="fa-folder-open-o",
                     category="DataAnalyze")
+
 appbuilder.add_view(TestCasesView(), "GernalCasesTrack")
 
 # appbuilder.add_separator("TestReports")

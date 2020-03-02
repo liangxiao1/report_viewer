@@ -89,6 +89,7 @@ DB_BASE = declarative_base()
 JOB_XML = ARGS.log_dir + "/results.xml"
 JOB_LOG = ARGS.log_dir + "/job.log"
 
+
 # pylint: disable=R0902,R0903
 
 
@@ -122,6 +123,7 @@ def get_ami_id():
     '''
     If no ami_id provided from parameters, then try to get it from the test
     log.
+    If no ami_id provided from parameters, then try to get it from the test log.
     '''
     if ARGS.ami_id is None:
         ami_id = None
@@ -225,6 +227,7 @@ def report_writer():
                     'test_date': test_date,
                     'pass_rate': 0
                 }
+         
             instances_sub_report[instance_type]['cases_total'] += 1
             if 'PASS' in test_item['status']:
                 instances_sub_report[instance_type]['cases_pass'] += 1
