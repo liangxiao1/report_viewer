@@ -412,15 +412,16 @@ class TestCasesView(ModelView):
     ]
     list_columns = [
         "case_id", "case_title", "ec2_casename", "azure_casename",
-        "aliyun_casename", "esx_casename", "hyperv_casename", "create_date",
-        "create_by"
+        "aliyun_casename", "openstack_casename", "esx_casename",
+        "hyperv_casename", "create_date","create_by"
     ]
     search_columns = [
         "case_id", "case_title", "case_description", "case_keycmd", "ec2_repo",
         "ec2_casename", "ec2_owner", "ec2_comments", "azure_repo",
         "azure_casename", "azure_owner", "azure_comments", "aliyun_repo",
-        "aliyun_casename", "aliyun_owner", "aliyun_comments", "esx_repo",
-        "esx_casename", "esx_owner", "esx_comments", "hyperv_repo",
+        "aliyun_casename", "aliyun_owner", "aliyun_comments",
+        "openstack_repo","openstack_casename","openstack_owner","openstack_comments",
+        "esx_repo","esx_casename", "esx_owner", "esx_comments", "hyperv_repo",
         "hyperv_casename", "hyperv_owner", "hyperv_comments", "create_date",
         "last_update", "create_by", "comments"
     ]
@@ -432,7 +433,9 @@ class TestCasesView(ModelView):
                 "ec2_repo", "ec2_casename", "ec2_owner", "ec2_comments",
                 "azure_repo", "azure_casename", "azure_owner",
                 "azure_comments", "aliyun_repo", "aliyun_casename",
-                "aliyun_owner", "aliyun_comments", "esx_repo", "esx_casename",
+                "aliyun_owner", "aliyun_comments",
+                "openstack_repo","openstack_casename","openstack_owner",
+                "openstack_comments", "esx_repo", "esx_casename",
                 "esx_owner", "esx_comments", "hyperv_repo", "hyperv_casename",
                 "hyperv_owner", "hyperv_comments", "create_date",
                 "last_update", "create_by", "comments"
