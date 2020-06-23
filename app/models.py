@@ -30,13 +30,48 @@ class EC2_Report(Model):
     test_date = Column(Date, nullable=True)
     comments = Column(String)
     platform = Column(String(50))
+    testrun = Column(String(50))
 
     def __repr__(self):
         return self.log_id
 
     def result_url(self):
+        print("testrun is {}".format(self.testrun))
+        if self.testrun is not None and self.testrun != '' and "None" not in self.testrun:
+            self.report_url = url_for('EC2CasePubView.list',_flt_0_testrun=str(self.testrun), _flt_0_instance_type=str(self.instance_type))
+            print("testrun is {}".format(self.testrun))
         return Markup('<a href="' + self.report_url + '">result</a>')
 
+class EC2ReportCase(Model):
+    '''
+    table for storing ec2 project log by casename
+    '''
+    log_id = Column(Integer, primary_key=True)
+    ami_id = Column(String(50))
+    instance_type = Column(String(50))
+    compose_id = Column(String(50))
+    pkg_ver = Column(String(50))
+    branch_name = Column(String(50))
+    testrun = Column(String(50))
+    case_name = Column(String(50))
+    case_result = Column(String(50))
+    run_time = Column(Float)
+    case_debuglog = Column(String)
+    test_date = Column(Date, nullable=True)
+    component = Column(String(50))
+    comments = Column(String)
+    failure_id =  Column(Integer)
+    platform = Column(String(50))
+
+    def __repr__(self):
+        return self.log_id
+
+    def failure(self):
+        self.failure_url = None
+        if self.failure_id is not None and self.failure_id != '' and "None" not in str(self.failure_id):
+            self.failure_url = url_for('BugsPubView.show', pk=str(self.failure_id))
+            return Markup('<a href="' + self.failure_url + '">' + str(self.failure_id) + '</a>')
+        return Markup(self.failure_id)
 
 class AliyunReport(Model):
     '''

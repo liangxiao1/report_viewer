@@ -7,7 +7,7 @@ from flask_appbuilder import MultipleView
 from . import appbuilder, db
 
 from .models import (EC2_Report, AliyunReport, AzureReport, Bugs, FailureType,
-                     FailureStatus, TestCases)
+                     FailureStatus, TestCases, EC2ReportCase)
 
 # Below import is for charts
 import calendar
@@ -28,13 +28,13 @@ class EC2_ReportPubView(ModelView):
     list_columns = [
         "log_id", "instance_type", "instance_available_date", "compose_id",
         "pkg_ver", "bug_id", "branch_name", "cases_pass", "cases_fail",
-        "cases_cancel", "cases_other", "cases_total", "pass_rate", "test_date"
+        "cases_cancel", "cases_other", "cases_total", "pass_rate", "test_date","testrun"
     ]
     search_columns = [
         "log_id", "ami_id", "instance_type", "instance_available_date",
         "compose_id", "pkg_ver", "bug_id", "branch_name", "cases_pass",
         "cases_fail", "cases_cancel", "cases_other", "cases_total",
-        "pass_rate", "test_date", "comments", "platform"
+        "pass_rate", "test_date", "comments", "platform","testrun"
     ]
 
     show_fieldsets = [
@@ -43,7 +43,7 @@ class EC2_ReportPubView(ModelView):
                 "log_id", "ami_id", "instance_type", "instance_available_date",
                 "compose_id", "pkg_ver", "bug_id", "result_url", "branch_name",
                 "cases_pass", "cases_fail", "cases_cancel", "cases_other",
-                "cases_total", "pass_rate", "test_date", "comments", "platform"
+                "cases_total", "pass_rate", "test_date", "comments", "platform","testrun"
             ]
         }),
         ("Description", {
@@ -56,33 +56,34 @@ class EC2_ReportPubView(ModelView):
     # base_filters = [["created_by", FilterEqualFunction, get_user]]
 
 
-class EC2_ReportView(ModelView):
-    datamodel = SQLAInterface(EC2_Report)
+class EC2_ReportView(EC2_ReportPubView):
     base_permissions = [
         "can_list", "can_show", "menu_access", "can_add", "can_edit",
         "can_delete"
     ]
-    label_columns = {"result_url": "Result"}
+
+class EC2CasePubView(ModelView):
+    datamodel = SQLAInterface(EC2ReportCase)
+    base_permissions = ["can_list", "can_show", "menu_access"]
+    #label_columns = {"failure_url": ""}
+
     list_columns = [
-        "log_id", "instance_type", "instance_available_date", "compose_id",
-        "pkg_ver", "bug_id", "branch_name", "cases_pass", "cases_fail",
-        "cases_cancel", "cases_other", "cases_total", "pass_rate", "test_date",
-        "comments"
+        "log_id", "instance_type", "compose_id",
+        "pkg_ver", "branch_name", "testrun", "case_name","run_time",
+        "case_result", "test_date","comments", "failure"
     ]
     search_columns = [
-        "log_id", "ami_id", "instance_type", "instance_available_date",
-        "compose_id", "pkg_ver", "bug_id", "branch_name", "cases_pass",
-        "cases_fail", "cases_cancel", "cases_other", "cases_total",
-        "pass_rate", "test_date", "comments", "platform"
+        "log_id", "instance_type", "compose_id",
+        "pkg_ver", "branch_name", "testrun", "case_name","run_time",
+        "case_result", "case_debuglog", "test_date","comments", "failure_id"
     ]
 
     show_fieldsets = [
         ("Summary", {
             "fields": [
-                "log_id", "ami_id", "instance_type", "instance_available_date",
-                "compose_id", "pkg_ver", "bug_id", "result_url", "branch_name",
-                "cases_pass", "cases_fail", "cases_cancel", "cases_other",
-                "cases_total", "pass_rate", "test_date", "comments", "platform"
+                "log_id", "instance_type", "compose_id",
+        "pkg_ver", "branch_name", "testrun", "case_name","run_time",
+        "case_result", "case_debuglog", "test_date","comments", "failure"
             ]
         }),
         ("Description", {
@@ -90,9 +91,14 @@ class EC2_ReportView(ModelView):
             "expanded": True
         }),
     ]
+    # base_order = ("log_id", "asc")
     base_order = ("log_id", "desc")
-
-
+    # base_filters = [["created_by", FilterEqualFunction, get_user]]
+class EC2CaseView(EC2CasePubView):
+    base_permissions = [
+        "can_list", "can_show", "menu_access", "can_add", "can_edit",
+        "can_delete"
+    ]
 class AliyunReportPubView(ModelView):
     datamodel = SQLAInterface(AliyunReport)
     base_permissions = ["can_list", "can_show", "menu_access"]
@@ -201,43 +207,11 @@ class BugsPubView(ModelView):
     base_order = ("id", "desc")
 
 
-class BugsView(ModelView):
-    datamodel = SQLAInterface(Bugs)
+class BugsView(BugsPubView):
     base_permissions = [
         "can_list", "can_show", "menu_access", "can_add", "can_edit",
         "can_delete"
     ]
-
-    # label_columns = {"bug_url": "BZ#"}
-
-    list_columns = [
-        "id", "test_suite", "case_name", "bug_url", "bug_title",
-        "failure_status", "failure_type", "comments", "last_update",
-        "create_date"
-    ]
-    search_columns = [
-        "id", "test_suite", "case_name", "bug_id", "bug_title",
-        "failure_status", "branch_name", "comments", "last_update",
-        "create_date", 'failure_type', 'identify_keywords',
-        'identify_debuglog', 'contactor'
-    ]
-
-    show_fieldsets = [
-        ("Summary", {
-            "fields": [
-                "id", "test_suite", "case_name", "bug_url", "bug_title",
-                "failure_status", "branch_name", "comments", "last_update",
-                "create_date", 'failure_type', 'identify_keywords',
-                'identify_debuglog', 'contactor'
-            ]
-        }),
-        ("Description", {
-            "fields": ["description"],
-            "expanded": True
-        }),
-    ]
-    # base_order = ("log_id", "asc")
-    base_order = ("id", "desc")
 
 
 class FailureTypeView(ModelView):
@@ -485,6 +459,14 @@ appbuilder.add_view(EC2_ReportPubView,
                     category="TestReports")
 appbuilder.add_view(EC2_ReportView,
                     "Edit EC2 Test Reports",
+                    icon="fa-envelope",
+                    category="Management")
+appbuilder.add_view(EC2CasePubView,
+                    "EC2 Test Reports by Cases",
+                    icon="fa-folder-open-o",
+                    category="TestReports")
+appbuilder.add_view(EC2CaseView,
+                    "Edit EC2 Test Reports by Cases",
                     icon="fa-envelope",
                     category="Management")
 
