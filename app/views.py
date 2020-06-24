@@ -7,7 +7,7 @@ from flask_appbuilder import MultipleView
 from . import appbuilder, db
 
 from .models import (EC2_Report, AliyunReport, AzureReport, Bugs, FailureType,
-                     FailureStatus, TestCases, EC2ReportCase)
+                     FailureStatus, TestCases, EC2ReportCase, EC2Case)
 
 # Below import is for charts
 import calendar
@@ -70,7 +70,7 @@ class EC2CasePubView(ModelView):
     list_columns = [
         "log_id", "instance_type", "compose_id",
         "pkg_ver", "branch_name", "testrun", "case_name","run_time",
-        "case_result", "test_date","comments", "failure"
+        "case_result", "test_date","comments", "failure", "case_intro"
     ]
     search_columns = [
         "log_id", "instance_type", "compose_id",
@@ -83,7 +83,7 @@ class EC2CasePubView(ModelView):
             "fields": [
                 "log_id", "instance_type", "compose_id",
         "pkg_ver", "branch_name", "testrun", "case_name","run_time",
-        "case_result", "case_debuglog", "test_date","comments", "failure"
+        "case_result", "case_debuglog", "test_date","comments", "failure", "case_intro"
             ]
         }),
         ("Description", {
@@ -99,6 +99,44 @@ class EC2CaseView(EC2CasePubView):
         "can_list", "can_show", "menu_access", "can_add", "can_edit",
         "can_delete"
     ]
+
+class EC2CaseSourcePubView(ModelView):
+    datamodel = SQLAInterface(EC2Case)
+    base_permissions = ["can_list", "can_show", "menu_access"]
+    #label_columns = {"failure_url": ""}
+
+    list_columns = [
+        "case_id", "case_name", "bugzilla_id", "polarion_id",
+        "component", "priority", "maintainer", "description","key_steps",
+        "expected_result", "source","comments"
+    ]
+    search_columns = [
+        "case_id", "case_name", "bugzilla_id", "polarion_id",
+        "component", "priority", "maintainer", "description","key_steps",
+        "expected_result", "source_url","comments"
+    ]
+
+    show_fieldsets = [
+        ("Summary", {
+            "fields": [
+                "case_id", "case_name", "bugzilla_id", "polarion_id",
+        "component", "priority", "maintainer", "description","key_steps",
+        "expected_result", "source","comments"
+            ]
+        }),
+        ("Description", {
+            "fields": ["description"],
+            "expanded": True
+        }),
+    ]
+    base_order = ("case_id", "desc")
+
+class EC2CaseSourceView(EC2CaseSourcePubView):
+    base_permissions = [
+        "can_list", "can_show", "menu_access", "can_add", "can_edit",
+        "can_delete"
+    ]
+
 class AliyunReportPubView(ModelView):
     datamodel = SQLAInterface(AliyunReport)
     base_permissions = ["can_list", "can_show", "menu_access"]
@@ -525,6 +563,14 @@ appbuilder.add_view(TestBugsByCaseChartView,
                     icon="fa-folder-open-o",
                     category="DataAnalyze")
 
+appbuilder.add_view(EC2CaseSourcePubView,
+                    "EC2 Test Cases Source",
+                    icon="fa-folder-open-o",
+                    category="TestCases")
+appbuilder.add_view(EC2CaseSourceView,
+                    "Edit EC2 Test Cases",
+                    icon="fa-envelope",
+                    category="Management")
 appbuilder.add_view(TestCasesView(), "GernalCasesTrack")
 
 # appbuilder.add_separator("TestReports")

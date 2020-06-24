@@ -73,6 +73,32 @@ class EC2ReportCase(Model):
             return Markup('<a href="' + self.failure_url + '">' + str(self.failure_id) + '</a>')
         return Markup(self.failure_id)
 
+    def case_intro(self):
+         return Markup('<a href="' + url_for('EC2CaseSourcePubView.list',_flt_0_case_name=str(self.case_name)) + '">intro</a>')
+
+class EC2Case(Model):
+    '''
+    table for storing ec2 project test cases
+    '''
+    case_id = Column(Integer, primary_key=True)
+    case_name = Column(String(100))
+    bugzilla_id = Column(Integer)
+    polarion_id = Column(String(50))
+    component = Column(String(50))
+    priority = Column(Integer)
+    maintainer = Column(String(50))
+    description = Column(Text)
+    key_steps = Column(Text)
+    expected_result = Column(Text)
+    source_url = Column(String)
+    comments = Column(Text)
+
+    def __repr__(self):
+        return self.case_id
+
+    def source(self):
+         return Markup('<a href="' + self.source_url + '">source</a>')
+
 class AliyunReport(Model):
     '''
     table for storing Aliyun project
