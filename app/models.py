@@ -30,7 +30,7 @@ class EC2_Report(Model):
     test_date = Column(Date, nullable=True)
     comments = Column(String)
     platform = Column(String(50))
-    testrun = Column(String(50))
+    testrun = Column(String(100))
 
     def __repr__(self):
         return self.log_id
