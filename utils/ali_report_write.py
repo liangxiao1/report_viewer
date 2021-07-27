@@ -147,6 +147,16 @@ def get_ami_id():
                         LOG.info('find %s', ami_id)
                         break
         if ami_id is None:
+            LOG.info('no ami_id specified, try to get it from job.log')
+            with open(JOB_LOG) as file_handler:
+                for line in file_handler.readlines():
+                    # PARAMS (key=id, path=*/Image/*, default=None) => 'ubuntu_20_04_x64_20G_alibase_20200522.vhd'
+                    m = re.findall("PARAMS.*key=id.*Image.*=> '(.*)'", line)
+                    if m:
+                        ami_id = m[0].strip("'")
+                        LOG.info('find %s', ami_id)
+                        break
+        if ami_id is None:
             LOG.info('cannot get ami_id, exit!')
             sys.exit(1)
         ARGS.ami_id = ami_id
@@ -213,7 +223,9 @@ def report_writer():
             # k-ecs.hfg5.xlarge-Image-NIC-VSwitch-SecurityGroup-password-use \
             # rname-VM-dac1
             #
-            instance_type = re.findall('Cloud-Credential-Disk-(.*)-Image',
+            # Opt2. Cloud-Credential-Disk-ecs.hfg5.xlarge-name-NIC
+            #
+            instance_type = re.findall('Cloud-Credential-Disk-(.*)-\S*-NIC',
                                        test_item['id'])[0]
             if instance_type not in instances_sub_report:
                 instances_sub_report[instance_type] = {

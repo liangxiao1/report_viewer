@@ -5,6 +5,7 @@
 #
 # History:
 #   v1.0  2020-05-07  charles.shih  Init version
+#   v1.1  2020-10-14  charles.shih  Get information from logs
 
 set -e
 
@@ -12,12 +13,23 @@ python=python3
 executable=./ali_report_write.py
 dbfile=../app.db
 
-logpath=/var/www/html/results/iscsi/aliyun/ebm_validation_with_rhel7u7/
-imgname=rhel_7_7_64_20G_alibaba_20190830.vhd
-branchname=RHEL7.7
-pkgver=kernel-3.10.0-1062.el7.x86_64
-bugid=1823190
-comments="EBS validation with RHEL7.7"
+# User define: begin
+testname=check_aliyun_boot_time
+imgname=$outer_imgname
+branchname=$imgname
+pkgver=
+bugid=1870090
+comments="Instance boot time check."
+# User define: end
+
+logpath=/var/www/html/results/iscsi/aliyun/$testname/$imgname
+if [ -z "$pkgver" ]; then
+	ver=$(find $logpath -type f -name *uname__r_.log | head -n 1 | xargs cat) || exit 1
+	pkgver=kernel-$ver
+fi
+if [ -z "$branchname" ]; then
+	branchname=$(echo $imgname | sed 's/.*redhat_\([0-9]\)_\([0-9]\)_.*/RHEL\1.\2/') || exit 1
+fi
 
 # get jobs
 pushd $logpath
@@ -45,7 +57,7 @@ for jobname in $jobname_list; do
 	# write the job into database
 	[ -e $logpath/$jobname/results.html ] && file=results.html || file=job.log
 	$python $executable --dir $logpath/$jobname/ --db_file $dbfile --compose-id $imgname \
---report_url http://10.73.196.185/results/iscsi/aliyun/$(basename $logpath)/$jobname/$file \
+--report_url http://10.73.196.185/results/iscsi/aliyun/${logpath#*aliyun/}/$jobname/$file \
 --branch_name $branchname --pkg_ver $pkgver --bug-id $bugid --comments "$comments"
 
 done
